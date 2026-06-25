@@ -466,6 +466,43 @@ local function draw_controlling()
 	end
 end
 
+local function dummy_sequence_input_text(_input)
+	if _input == "forward" then return "→" end
+	if _input == "back" then return "←" end
+	if _input == "up" then return "↑" end
+	if _input == "down" then return "↓" end
+	return _input
+end
+
+local function dummy_sequence_frame_text(_frame)
+	if _frame == nil or #_frame == 0 then
+		return "N"
+	end
+
+	local _text = ""
+	for i = 1, #_frame do
+		if i > 1 then
+			_text = _text.."+"
+		end
+		_text = _text..dummy_sequence_input_text(_frame[i])
+	end
+
+	return _text
+end
+
+local function draw_dummy_sequence_debugger()
+	if globals == nil or globals.dummy_sequence_debugger == nil then
+		return
+	end
+
+	local _sequence = globals.dummy_sequence_debugger
+	local _x = 300
+	local _y = 10
+	for i = 1, #_sequence do
+		gui.text(_x, _y + ((i - 1) * 8), dummy_sequence_frame_text(_sequence[i]))
+	end
+end
+
 local hudModule = {
     ["registerStart"] = function()
     end,
@@ -484,6 +521,7 @@ local hudModule = {
 		draw_push_dist()
 		draw_pb_stats()
 		draw_jump_in_trainer()
+		draw_dummy_sequence_debugger()
 		if globals.options.display_recording_gui == true then
 			draw_rec()
 		end

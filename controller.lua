@@ -172,6 +172,10 @@ function queue_input_sequence(_player_obj, _sequence)
   _seq.sequence = copytable(_sequence)
   _seq.current_frame = 1
 
+  if globals ~= nil then
+    globals.dummy_sequence_debugger = copytable(_seq.sequence)
+  end
+
   _player_obj.pending_input_sequence = _seq
 end
 
@@ -243,6 +247,30 @@ local dash_attack_delay = {
     ["Jedah"]     = {forward = 10, back = 10},
 }
 
+local forward_dash_cancel_timing = {
+    default = {cancel_frame = 10, button_on_cancel_frame = false},
+    ["Sasquatch"] = {cancel_frame = 10, button_on_cancel_frame = true},
+    ["Gallon"] = {cancel_frame = 14, button_on_cancel_frame = false},
+}
+
+local function make_forward_dash_cancel_sequence(_button)
+  local char = get_p2_character()
+  local timing = forward_dash_cancel_timing[char] or forward_dash_cancel_timing.default
+  local _sequence = { { "forward" }, {}, { "forward" } }
+
+  for i = 4, timing.cancel_frame - 1 do
+    table.insert(_sequence, {})
+  end
+
+  local cancel_input = { "back" }
+  if timing.button_on_cancel_frame then
+    table.insert(cancel_input, _button)
+  end
+  table.insert(_sequence, cancel_input)
+
+  return _sequence
+end
+
 function make_input_sequence(_stick, _button, _delay_type, _delay_num)
 
   if _button == "recording" then
@@ -273,8 +301,8 @@ function make_input_sequence(_stick, _button, _delay_type, _delay_num)
   -- full moves special cases
   elseif  _stick == "back dash" then _sequence = { { "back" }, {}, { "back" } }
   elseif  _stick == "forward dash" then _sequence = { { "forward" }, {}, { "forward" } }
-  elseif  _stick == "back dash cancel" then _sequence = { { "back" }, {}, { "back" }, {}, {}, {}, {}, {} }
-  elseif  _stick == "forward dash cancel" then _sequence = { { "forward" }, {}, { "forward" }, {}, {}, {}, {}, {} }
+  elseif  _stick == "back dash cancel" then _sequence = { { "back" }, {}, { "back" }, {}, {}, {}, {}, {}, {} }
+  elseif  _stick == "forward dash cancel" then _sequence = make_forward_dash_cancel_sequence(_button)
   elseif  _stick == "Shun Goku Ratsu" then _sequence = { { "LP" }, {}, {}, { "LP" }, { "forward" }, {"LK"}, {}, { "HP" } }
   elseif  _stick == "Kongou Kokuretsu Zan" then _sequence = { { "down" }, {}, { "down" }, {}, { "down", "LP", "MP", "HP" } }
   elseif _stick == "PB-light" then _sequence = { {"LP"}, {}, {"LP"}, {}, {"LP"}, {}, {"LP"}, {}, {"LP"},{},{"LP"} } 
@@ -316,16 +344,6 @@ function make_input_sequence(_stick, _button, _delay_type, _delay_num)
       end
     end
   end
-
-  if _stick == "forward dash cancel" then
-    local char = get_p2_character()
-
-    if char == "Sasquatch" then
-        table.insert(_sequence, { "back", _button })
-    else
-        table.insert(_sequence, { "back" })
-    end
-end
 
     if _stick == "back dash cancel" then
     local char = get_p2_character()
