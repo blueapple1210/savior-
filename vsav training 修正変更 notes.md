@@ -297,6 +297,97 @@ Current working value:
 14
 
 ---
+Gallon Forward Dash Cancel
+
+Last Updated: 2026-06-25
+
+Current Value:
+
+cancel_frame = 14
+button_on_cancel_frame = false
+
+Testing:
+
+10 = Long Dash
+12 = Long Dash
+13 = Long Dash
+14 = Short Dash
+15 = Short Dash
+20 = Short Dash
+
+Conclusion:
+
+Stable threshold appears to be:
+
+cancel_frame = 14
+
+Status:
+Adopted
+
+Felicia Forward Dash Cancel
+
+Last Updated: 2026-06-25
+
+Current Value:
+
+cancel_frame = 14
+button_on_cancel_frame = false
+
+Testing:
+
+11 = Long Dash
+12 = Long Dash
+13 = Short Dash (unstable)
+14 = Stable Short Dash
+
+Additional Notes:
+
+Short Dash j.MK confirmed
+13 occasionally produced Long Dash
+14 has not reproduced the issue
+
+Conclusion:
+
+Theoretical minimum:
+
+13
+
+Practical value:
+
+14
+
+Status:
+Adopted
+
+Dummy Sequence Debugger
+
+Last Updated: 2026-06-25
+
+Modified Files:
+
+controller.lua
+hud.lua
+
+Purpose:
+Display generated pending_input_sequence for verification.
+
+Status:
+Working
+-----
+### 2023-02-21 Discord (nbee)
+
+Character Specific Reversal is a known issue.
+
+> "Feature doesnt work, we never figured out how to not make it crash."
+
+> "Well the feature does work, it just crashes the game lol."
+
+Conclusion:
+- Crashes are a known upstream bug.
+- Not introduced by this fork.
+- Avoid relying on Character Specific Reversal for new features.
+
+-----
 
 Last Updated:
 Current development cycle
